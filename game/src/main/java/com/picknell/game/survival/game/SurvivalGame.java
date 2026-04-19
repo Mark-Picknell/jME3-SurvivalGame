@@ -1,6 +1,7 @@
-package com.picknell.survival;
+package com.picknell.game.survival.game;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AppState;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.BetterCharacterControl;
@@ -16,7 +17,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
-import com.jme3.system.AppSettings;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
@@ -24,20 +24,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This is the Main Class of a survival game.
+ * The JMonkeyEngine game entry, you should only do initializations for your game here, game logic is handled by
+ * Custom states {@link com.jme3.app.state.BaseAppState}, Custom controls {@link com.jme3.scene.control.AbstractControl}
+ * and your custom entities implementations of the previous.
  *
  * @author Mark E. Picknell
  */
-public class Main extends SimpleApplication implements ActionListener {
+public class SurvivalGame extends SimpleApplication implements ActionListener {
 
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-
-    public static final String TITLE = "Untitled";
-
-    public static final int DEFAULT_WIDTH = 960;    // PlayStation Vita screen width.
-    public static final int DEFAULT_HEIGHT = 544;   // PlayStation Vita screen height.
-    public static final int DEFAULT_FRAME_RATE = 60;
-    public static final boolean DEFAULT_FULLSCREEN = false;
+    private static final Logger LOGGER = Logger.getLogger(SurvivalGame.class.getName());
 
     private static final String INPUT_MAPPING_FORWARD = "forward";
     private static final String INPUT_MAPPING_BACKWARD = "backward";
@@ -46,23 +41,7 @@ public class Main extends SimpleApplication implements ActionListener {
 
     private static final String INPUT_MAPPING_JUMP = "jump";
     private static final String INPUT_MAPPING_RUN = "run";
-
-    public static void main(String[] args) {
-
-        AppSettings settings = new AppSettings(true);
-        settings.setTitle(TITLE);
-        settings.setWidth(DEFAULT_WIDTH);
-        settings.setHeight(DEFAULT_HEIGHT);
-        settings.setFrameRate(DEFAULT_FRAME_RATE);
-        settings.setFullscreen(DEFAULT_FULLSCREEN);
-
-        Main app = new Main();
-        app.setSettings(settings);
-        // TODO: create and add branding spalsh screen for jMonkeyEngine 3.
-        app.setShowSettings(false);
-        app.start();
-    }
-
+    
     private BulletAppState physicsState;
     private PhysicsSpace physicsSpace;
 
@@ -82,10 +61,19 @@ public class Main extends SimpleApplication implements ActionListener {
     private float runningSpeed = 12.5f;
     private float walkSpeed = walkingSpeed;
 
+    public SurvivalGame() {
+        
+    }
+    
+    public SurvivalGame(AppState... initialStates) {
+        super(initialStates);
+    }
+    
     @Override
     public void simpleInitApp() {
+        // TODO: Remember to set logging level to SEVERE before release.
         flyCam.setEnabled(false);
-//      flyCam.setMoveSpeed(50);
+        // flyCam.setMoveSpeed(50);
 
         initPhysics();
         initTerrain();
@@ -216,6 +204,7 @@ public class Main extends SimpleApplication implements ActionListener {
         playerControl.warp(new Vector3f(x, y, z));
 
         chaseCamera = new ChaseCamera(getCamera(), player, inputManager);
+        chaseCamera.setInvertVerticalAxis(false);
         chaseCamera.setDefaultDistance(6f);
         chaseCamera.setMinDistance(2f);
         chaseCamera.setMaxDistance(12f);
