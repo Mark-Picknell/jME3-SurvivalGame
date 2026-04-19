@@ -6,17 +6,23 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.control.BetterCharacterControl;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
@@ -39,9 +45,13 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
     private static final String INPUT_MAPPING_LEFT = "left";
     private static final String INPUT_MAPPING_RIGHT = "right";
 
+    private static final String INPUT_MAPPING_INTERACT = "interact";
     private static final String INPUT_MAPPING_JUMP = "jump";
     private static final String INPUT_MAPPING_RUN = "run";
-    
+
+    private int stoneCount = 0;
+    private int woodCount = 0;
+
     private BulletAppState physicsState;
     private PhysicsSpace physicsSpace;
 
@@ -61,6 +71,12 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
     private float runningSpeed = 12.5f;
     private float walkSpeed = walkingSpeed;
 
+    private Node stone;
+
+    private BitmapText crosshair;
+
+    private BitmapText debugText;
+
     public SurvivalGame() {
         
     }
@@ -79,6 +95,8 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         initTerrain();
         initPlayer();
         initInputs();
+        initTestRock();
+        initDisplay();
     }
 
     @Override
@@ -113,10 +131,15 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         playerControl.setWalkDirection(walkDirection);
         playerControl.setViewDirection(viewDirection);
 
+        debugText.setText("Stone: " + stoneCount +
+                "\nWood: " + woodCount +
+                "\nPos: " + player.getWorldTranslation()
+        );
     }
 
     @Override
     public void simpleRender(RenderManager rm) {
+        //TODO: Remove redundant method if no custom render code will be implemented here.
     }
 
     @Override
@@ -134,6 +157,11 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
             case INPUT_MAPPING_RIGHT:
                 right = isPressed;
                 break;
+                case  INPUT_MAPPING_INTERACT:
+                    if(isPressed) {
+                        interact();
+                    }
+                    break;
             case INPUT_MAPPING_JUMP:
                 if (isPressed) {
                     playerControl.jump();
@@ -145,9 +173,51 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         }
     }
 
-    private void initPhysics() {
-        LOGGER.log(Level.INFO, "Initalizing physics for test scene.");
+    private void interact() {
+        CollisionResults results = new CollisionResults();
 
+        Ray ray = new Ray(
+                cam.getLocation(),
+                cam.getDirection()
+        );
+
+        rootNode.collideWith(ray, results);
+
+        if (results.size() == 0) {
+            return;
+        }
+
+        Spatial hit = results.getClosestCollision().getGeometry();
+        LOGGER.log(Level.INFO, "Found hit at {0} {1}", new Object[] {hit.getName(), hit.getWorldTranslation()});
+
+        while (hit != null) {
+
+            if ("Stone".equals(hit.getName())) {
+
+                Integer amount =
+                        hit.getUserData("resourceAmount");
+
+                if (amount != null && amount > 0) {
+
+                    stoneCount++;
+
+                    amount--;
+
+                    hit.setUserData("resourceAmount", amount);
+
+                    if (amount <= 0) {
+                        hit.removeFromParent();
+                    }
+                }
+
+                return;
+            }
+
+            hit = hit.getParent();
+        }
+    }
+
+    private void initPhysics() {
         physicsState = new BulletAppState();
         physicsState.setBroadphaseType(PhysicsSpace.BroadphaseType.DBVT);
         physicsState.setThreadingType(BulletAppState.ThreadingType.PARALLEL);
@@ -161,8 +231,6 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         int patchSize = 65;
         int heightMapSize = 513;
         float[] heightMap = new float[heightMapSize * heightMapSize];
-
-        LOGGER.log(Level.INFO, "Initalizing terrain for test scene.");
 
         Material terrainMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         //terrainMaterial.setBoolean("UseMaterialColors", true);
@@ -191,8 +259,6 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         float z = 0;
         float x = 0;
         float y = terrain.getHeight(new Vector2f(x, z));
-        
-        LOGGER.log(Level.INFO, "Initalizing player for test scene.");
 
         player = new Node("Player");
         rootNode.attachChild(player);
@@ -219,10 +285,49 @@ public class SurvivalGame extends SimpleApplication implements ActionListener {
         inputManager.addMapping(INPUT_MAPPING_BACKWARD, new KeyTrigger(KeyInput.KEY_S));
         inputManager.addMapping(INPUT_MAPPING_LEFT, new KeyTrigger(KeyInput.KEY_A));
         inputManager.addMapping(INPUT_MAPPING_RIGHT, new KeyTrigger(KeyInput.KEY_D));
+        inputManager.addMapping(INPUT_MAPPING_INTERACT, new KeyTrigger(KeyInput.KEY_E));
         inputManager.addMapping(INPUT_MAPPING_JUMP, new KeyTrigger(KeyInput.KEY_SPACE));
         inputManager.addMapping(INPUT_MAPPING_RUN, new KeyTrigger(KeyInput.KEY_LSHIFT));
 
-        inputManager.addListener(this, INPUT_MAPPING_FORWARD, INPUT_MAPPING_BACKWARD, INPUT_MAPPING_LEFT, INPUT_MAPPING_RIGHT, INPUT_MAPPING_JUMP, INPUT_MAPPING_RUN);
+        inputManager.addListener(this, INPUT_MAPPING_FORWARD, INPUT_MAPPING_BACKWARD, INPUT_MAPPING_LEFT, INPUT_MAPPING_RIGHT, INPUT_MAPPING_INTERACT, INPUT_MAPPING_JUMP, INPUT_MAPPING_RUN);
     }
 
+    private void initTestRock() {
+        Box stoneMesh = new Box(1f, 1f, 1f);
+        Geometry stoneGeometry = new Geometry("Stone.Geometry", stoneMesh);
+
+        Material stoneMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        stoneMaterial.setColor("Color", ColorRGBA.LightGray);
+        stoneMaterial.getAdditionalRenderState().setWireframe(true);
+
+        stoneGeometry.setMaterial(stoneMaterial);
+
+        stone = new Node("Stone");
+        stone.attachChild(stoneGeometry);
+
+        stone.setLocalTranslation(8, terrain.getHeight(new Vector2f(8, 0)) + 1.0f, 0);
+
+        stone.setUserData("resourceType", "Stone");
+        stone.setUserData("resourceAmount", 10);
+
+        rootNode.attachChild(stone);
+    }
+
+    private void initDisplay() {
+        debugText = new BitmapText(guiFont);
+        debugText.setSize(18);
+        debugText.setLocalTranslation(10, settings.getHeight() - 10, 0);
+        guiNode.attachChild(debugText);
+
+        crosshair = new BitmapText(guiFont);
+        crosshair.setSize(32);
+        crosshair.setText("+");
+        crosshair.setLocalTranslation(
+                settings.getWidth() / 2f,
+                settings.getHeight() / 2f,
+                0
+        );
+
+        guiNode.attachChild(crosshair);
+    }
 }

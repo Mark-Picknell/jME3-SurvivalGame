@@ -1,4 +1,4 @@
-package com.picknell.game.survival.desktopmodule;
+package com.picknell.game.survival;
 
 import com.jme3.system.AppSettings;
 import com.picknell.game.survival.app.SurvivalGame;
@@ -10,7 +10,7 @@ import com.picknell.game.survival.app.SurvivalGame;
  */
 public class DesktopLauncher {
     
-    public static final String TITLE = "Untitled";
+    public static final String TITLE = "JME3-SurvivalGame";
 
     public static final int DEFAULT_WIDTH = 960;    // PlayStation Vita screen width.
     public static final int DEFAULT_HEIGHT = 544;   // PlayStation Vita screen height.

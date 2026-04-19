@@ -4,9 +4,9 @@ plugins {
     id "io.github.0ffz.github-packages" version "1.2.1" // Plugin for anonymous inclusion of artifacts hosted in github package registry
 }
 
-group 'com.picknell.app.survival'
+group 'com.picknell.game.survival'
 version '1.0.0'
-mainClassName = 'com.picknell.app.survival.desktopmodule.DesktopLauncher'
+mainClassName = 'com.picknell.game.survival.DesktopLauncher'
 String dependenciesString = ""
 
 application {
@@ -16,7 +16,7 @@ application {
 }
 
 dependencies {
-    implementation project(path: ':app')
+    implementation project(path: ':Game')
     implementation libs.jmeDesktop
     implementation libs.jmeLwjgl3
 
@@ -54,17 +54,17 @@ task downloadAndUnzipWindowsJre(dependsOn: downloadWindowsJre, type: Copy) {
 task buildWindowsDistribution(dependsOn: [distZip, downloadAndUnzipWindowsJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/Jmesurvivalgame.bat"), zipTree(distZip.archiveFile), "${buildDir}/jres/windowsJre"
-    into new File(buildDir, 'distributions/Jmesurvivalgame-windows')
+    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.bat"), zipTree(distZip.archiveFile), "${buildDir}/jres/windowsJre"
+    into new File(buildDir, 'distributions/JME3-SurvivalGame-Windows')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipWindowsDistribution( dependsOn:buildWindowsDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "Jmesurvivalgame-windows.zip"
+    archiveFileName = "JME3-SurvivalGame-Windows.zip"
     destinationDirectory = file("$buildDir/distributions")
-    from "$buildDir/distributions/Jmesurvivalgame-windows"
+    from "$buildDir/distributions/JME3-SurvivalGame-Windows"
 }
 
 
@@ -86,26 +86,26 @@ task downloadAndUnzipLinuxJre(dependsOn: downloadLinuxJre, type: Copy) {
 task buildLinuxDistribution(dependsOn: [distZip, downloadAndUnzipLinuxJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/Jmesurvivalgame.sh"){
+    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.sh"){
         fileMode 0755
     }
     from zipTree(distZip.archiveFile)
     from "${buildDir}/jres/linuxJre"
-    into new File(buildDir, 'distributions/Jmesurvivalgame-linux')
+    into new File(buildDir, 'distributions/JME3-SurvivalGame-Linux')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipLinuxDistribution( dependsOn:buildLinuxDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "Jmesurvivalgame-linux.tar.gz"
+    archiveFileName = "JME3-SurvivalGame-Linux.tar.gz"
     destinationDirectory = file("$buildDir/distributions")
-    from ("$buildDir/distributions/Jmesurvivalgame-linux"){
+    from ("$buildDir/distributions/JME3-SurvivalGame-Linux"){
       include('**.sh')
       include('**/java')
       fileMode 0755
     }
-    from ("$buildDir/distributions/Jmesurvivalgame-linux"){
+    from ("$buildDir/distributions/JME3-SurvivalGame-Linux"){
         exclude('**.sh')
         exclude('**/java')
     }
@@ -130,26 +130,26 @@ task downloadAndUnzipMacJre(dependsOn: downloadMacJre, type: Copy) {
 task buildMacDistribution(dependsOn: [distZip, downloadAndUnzipMacJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/Jmesurvivalgame.command"){
+    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.command"){
         fileMode 0755
     }
     from zipTree(distZip.archiveFile) 
     from "${buildDir}/jres/macJre"
-    into new File(buildDir, 'distributions/Jmesurvivalgame-mac')
+    into new File(buildDir, 'distributions/JME3-SurvivalGame-Mac')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipMacDistribution( dependsOn:buildMacDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "Jmesurvivalgame-mac.tar.gz"
+    archiveFileName = "JME3-SurvivalGame-Mac.tar.gz"
     destinationDirectory = file("$buildDir/distributions")
-    from ("$buildDir/distributions/Jmesurvivalgame-mac"){
+    from ("$buildDir/distributions/JME3-SurvivalGame-Mac"){
       include('**.command')
       include('**/java')
       fileMode 0755
     }
-    from ("$buildDir/distributions/Jmesurvivalgame-mac"){
+    from ("$buildDir/distributions/JME3-SurvivalGame-Mac"){
         exclude('**.command')
         exclude('**/java')
     }
