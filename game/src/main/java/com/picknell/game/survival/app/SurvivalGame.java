@@ -1,4 +1,4 @@
-package com.picknell.game.survival.game;
+package com.picknell.game.survival.app;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AppState;
@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The JMonkeyEngine game entry, you should only do initializations for your game here, game logic is handled by
+ * The JMonkeyEngine app entry, you should only do initializations for your app here, app logic is handled by
  * Custom states {@link com.jme3.app.state.BaseAppState}, Custom controls {@link com.jme3.scene.control.AbstractControl}
  * and your custom entities implementations of the previous.
  *

@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.picknell.game.survival.game;
+package com.picknell.game.survival.player;
 
 /**
- * handles terrain, chunks, biomes, props
- * @author Mark E. Picknell
+ *
+ * @author m66pe
  */
-public class WorldAppState {
+public class PlayerState {
     
 }

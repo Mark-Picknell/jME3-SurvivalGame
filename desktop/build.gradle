@@ -4,9 +4,9 @@ plugins {
     id "io.github.0ffz.github-packages" version "1.2.1" // Plugin for anonymous inclusion of artifacts hosted in github package registry
 }
 
-group 'com.picknell.game.survival'
+group 'com.picknell.app.survival'
 version '1.0.0'
-mainClassName = 'com.picknell.game.survival.desktopmodule.DesktopLauncher'
+mainClassName = 'com.picknell.app.survival.desktopmodule.DesktopLauncher'
 String dependenciesString = ""
 
 application {
@@ -16,7 +16,7 @@ application {
 }
 
 dependencies {
-    implementation project(path: ':game')
+    implementation project(path: ':app')
     implementation libs.jmeDesktop
     implementation libs.jmeLwjgl3
 

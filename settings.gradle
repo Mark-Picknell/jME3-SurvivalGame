@@ -15,6 +15,6 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "jME3-SurvivalGame"
-include ':desktop'
+include ':Desktop'
 
-include ':game'
+include ':Game'

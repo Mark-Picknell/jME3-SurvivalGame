@@ -1,7 +1,7 @@
 package com.picknell.game.survival.desktopmodule;
 
 import com.jme3.system.AppSettings;
-import com.picknell.game.survival.game.SurvivalGame;
+import com.picknell.game.survival.app.SurvivalGame;
 
 /**
  * Used to launch a jme application in desktop environment
