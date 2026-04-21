@@ -11,9 +11,8 @@ import com.picknell.game.survival.app.SurvivalGame;
 public class DesktopLauncher {
     
     public static final String TITLE = "JME3-SurvivalGame";
-
-    public static final int DEFAULT_WIDTH = 960;    // PlayStation Vita screen width.
-    public static final int DEFAULT_HEIGHT = 544;   // PlayStation Vita screen height.
+    public static final int DEFAULT_WIDTH = 960;
+    public static final int DEFAULT_HEIGHT = 544;
     public static final int DEFAULT_FRAME_RATE = 60;
     public static final boolean DEFAULT_FULLSCREEN = false;
     
@@ -28,8 +27,7 @@ public class DesktopLauncher {
         settings.setFullscreen(DEFAULT_FULLSCREEN);
         
         game.setSettings(settings);
-        // TODO: create and add branding splash screen for jMonkeyEngine 3.
-        game.setShowSettings(false);    // Settings Window not supported on Mac
+        game.setShowSettings(false);
         game.start();
     }
     
