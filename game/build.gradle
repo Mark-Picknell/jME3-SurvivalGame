@@ -13,4 +13,5 @@ dependencies {
     api libs.jmeNetworking
     api libs.jmeJBullet
 
+    libs.jmeNifty
 }

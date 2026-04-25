@@ -1,0 +1,17 @@
+MaterialDef SimpleGeom {
+
+    MaterialParameters {
+
+    }
+
+     Technique {
+        VertexShader GLSL330:   MatDefs/Geom/SimpleGeom.vert
+        GeometryShader GLSL330:   MatDefs/Geom/SimpleGeom.geom
+        FragmentShader GLSL330: MatDefs/Geom/SimpleGeom.frag
+
+        WorldParameters {
+            WorldViewProjectionMatrix
+        }
+    }
+
+}

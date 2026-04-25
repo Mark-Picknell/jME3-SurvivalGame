@@ -1,0 +1,65 @@
+<database>
+	<actors>
+		<actor id="0">
+		</actor>
+	</actors>
+
+	<!-- TODO: rename to roles -->
+	<classes>
+		<!-- TODO: rename to role -->
+		<class id="0">
+		</class>
+	</classes>
+
+	<skills>
+		<skill id="0">
+		</skill>
+	</skills>
+
+	<items>
+		<item id="0">
+			<icon>Potion.png</icon>
+			<icon>Potion.j3o</icon>
+			<name>Potion</name>
+			<description>Recovers 500 HP.</description>
+			<type>normal</type>
+			<price>50</price>
+			<consume>true</consume>
+			<scope>one ally</scope>
+			<occasion>always</occasion>
+			<invocation>
+				<speed>0</speed>
+				<success>100</success>
+				<repeats>1</repeats>
+				<tp-gain>0</tp-gain>
+				<hit-type>certain-hit</hit-type>
+				<animation>recovery 1</animation>
+			</invocation>
+			<damage>
+				<type>none</type>
+				<element></element>
+				<formula></formula>
+				<variance></variance>
+				<critical></critical>
+			</damage>
+			<effects>
+				<effect>
+					<kind>Recover HP</kind>
+					<content>500</content>
+				</effect>
+			<effects>
+			
+		</item>
+	</items>
+
+	<weapons>
+		<weapon id="0">
+		</weapon>
+	</weapons>
+
+	<enemies>
+		<enemie id="0">
+		</enemie>
+	</enemies>
+	
+</database>

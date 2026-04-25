@@ -4,9 +4,9 @@ plugins {
     id "io.github.0ffz.github-packages" version "1.2.1" // Plugin for anonymous inclusion of artifacts hosted in github package registry
 }
 
-group 'com.picknell.game.survival'
+group 'com.picknell'
 version '1.0.0'
-mainClassName = 'com.picknell.game.survival.DesktopLauncher'
+mainClassName = 'com.picknell.survivalgame.desktop.Main'
 String dependenciesString = ""
 
 application {
@@ -16,11 +16,12 @@ application {
 }
 
 dependencies {
-    implementation project(path: ':Game')
+    implementation project(path: ':game')
     implementation libs.jmeDesktop
     implementation libs.jmeLwjgl3
 
 }
+
 distZip {
     //having a degenerate folder within the dist zip complicates generating the other zips
     eachFile { file ->
@@ -54,17 +55,17 @@ task downloadAndUnzipWindowsJre(dependsOn: downloadWindowsJre, type: Copy) {
 task buildWindowsDistribution(dependsOn: [distZip, downloadAndUnzipWindowsJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.bat"), zipTree(distZip.archiveFile), "${buildDir}/jres/windowsJre"
-    into new File(buildDir, 'distributions/JME3-SurvivalGame-Windows')
+    from files("${projectDir}/scripts/desktopDeployment/jME3-SurvivalGame.bat"), zipTree(distZip.archiveFile), "${buildDir}/jres/windowsJre"
+    into new File(buildDir, 'distributions/jME3-SurvivalGame-windows')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipWindowsDistribution( dependsOn:buildWindowsDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "JME3-SurvivalGame-Windows.zip"
+    archiveFileName = "jME3-SurvivalGame-windows.zip"
     destinationDirectory = file("$buildDir/distributions")
-    from "$buildDir/distributions/JME3-SurvivalGame-Windows"
+    from "$buildDir/distributions/jME3-SurvivalGame-windows"
 }
 
 
@@ -86,26 +87,26 @@ task downloadAndUnzipLinuxJre(dependsOn: downloadLinuxJre, type: Copy) {
 task buildLinuxDistribution(dependsOn: [distZip, downloadAndUnzipLinuxJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.sh"){
+    from files("${projectDir}/scripts/desktopDeployment/jME3-SurvivalGame.sh"){
         fileMode 0755
     }
     from zipTree(distZip.archiveFile)
     from "${buildDir}/jres/linuxJre"
-    into new File(buildDir, 'distributions/JME3-SurvivalGame-Linux')
+    into new File(buildDir, 'distributions/jME3-SurvivalGame-linux')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipLinuxDistribution( dependsOn:buildLinuxDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "JME3-SurvivalGame-Linux.tar.gz"
+    archiveFileName = "jME3-SurvivalGame-linux.tar.gz"
     destinationDirectory = file("$buildDir/distributions")
-    from ("$buildDir/distributions/JME3-SurvivalGame-Linux"){
-      include('**.sh')
-      include('**/java')
-      fileMode 0755
+    from ("$buildDir/distributions/jME3-SurvivalGame-linux"){
+        include('**.sh')
+        include('**/java')
+        fileMode 0755
     }
-    from ("$buildDir/distributions/JME3-SurvivalGame-Linux"){
+    from ("$buildDir/distributions/jME3-SurvivalGame-linux"){
         exclude('**.sh')
         exclude('**/java')
     }
@@ -130,26 +131,26 @@ task downloadAndUnzipMacJre(dependsOn: downloadMacJre, type: Copy) {
 task buildMacDistribution(dependsOn: [distZip, downloadAndUnzipMacJre], type: Copy)
 {
     group 'distribution'
-    from files("${projectDir}/scripts/desktopDeployment/JME3-SurvivalGame.command"){
+    from files("${projectDir}/scripts/desktopDeployment/jME3-SurvivalGame.command"){
         fileMode 0755
     }
-    from zipTree(distZip.archiveFile) 
+    from zipTree(distZip.archiveFile)
     from "${buildDir}/jres/macJre"
-    into new File(buildDir, 'distributions/JME3-SurvivalGame-Mac')
+    into new File(buildDir, 'distributions/jME3-SurvivalGame-mac')
     includeEmptyDirs false
     exclude 'bin/**' //we are adding our own run scripts, exclude the ones coming from distZip
 }
 
 task zipMacDistribution( dependsOn:buildMacDistribution, type: Zip) {
     group 'distribution'
-    archiveFileName = "JME3-SurvivalGame-Mac.tar.gz"
+    archiveFileName = "jME3-SurvivalGame-mac.tar.gz"
     destinationDirectory = file("$buildDir/distributions")
-    from ("$buildDir/distributions/JME3-SurvivalGame-Mac"){
-      include('**.command')
-      include('**/java')
-      fileMode 0755
+    from ("$buildDir/distributions/jME3-SurvivalGame-mac"){
+        include('**.command')
+        include('**/java')
+        fileMode 0755
     }
-    from ("$buildDir/distributions/JME3-SurvivalGame-Mac"){
+    from ("$buildDir/distributions/jME3-SurvivalGame-mac"){
         exclude('**.command')
         exclude('**/java')
     }
@@ -165,4 +166,3 @@ task buildAllDistributions{
         println("Distributions created in build/distributions folder")
     }
 }
-

@@ -4,7 +4,7 @@ This is the readme for jME3-SurvivalGame, try to keep it up to date with any inf
 remembered to write down
 
 ## Project set up
-This is a gradle project using JMonkey Engine and other java libraries
+This is a Gradle project using JMonkey Engine and other Java libraries
 
 # Modules : 
 
@@ -35,12 +35,11 @@ Desktop module `:desktop` : holds `build.gradle` for desktop dependencies & uses
 ### Distribute with a JRE
 
 Distributing with a JRE means you'll need to provide an operating specific bundle for each OS you are
-targeting (which is a disadvantage) but your end use will not have to have a JRE locally installed
-(which is an advantage).
+targeting (which is a disadvantage). You will not have to have a JRE locally installed (which is an advantage).
 
 Either:
 
-In your IDE execute the gradle task distZip (which you'll find under gradle > distributions > buildAllDistributions)
+In your IDE execute the Gradle task distZip (which you'll find under Gradle > distributions > buildAllDistributions)
 
 Or:
 
