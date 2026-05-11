@@ -1,8 +1,0 @@
-Material Background Material : Common/MatDefs/Misc/UnshadedNodes.j3md {
-     MaterialParameters {
-        ColorMap : Flip Interface/Background.png
-     }
-    AdditionalRenderState {
-      Blend Alpha
-    }
-}
