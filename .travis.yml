@@ -1,0 +1,32 @@
+language: java
+dist: jammy # Use Ubuntu 22.04 for better JDK 21 support
+
+# Branches to build
+branches:
+  only:
+    - master
+
+# Updated to OpenJDK 21
+jdk:
+  - openjdk21
+
+# Modern caching for Gradle
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+# Remove lock files before caching to avoid unnecessary cache updates
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# Use the Gradle Wrapper for consistency
+script:
+  - ./gradlew check
+
+# Kept your existing Slack notifications
+notifications:
+  slack:
+    on_success: change
+    on_failure: always
