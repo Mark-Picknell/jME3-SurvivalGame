@@ -1,11 +1,19 @@
-/.gradle/
-/.nb-gradle/
-/build/
-/private/
-/*.dll
-/*.dylib
-/*.so
+#FOLDERS
+.gradle
+.idea
+gradle
+build
+out
 
-/.idea/
-
+#FILES
+hs_err_pid*
 local.properties
+gradlew
+gradlew.bat
+
+#FILE TYPES
+*.dll
+*.jar
+*.tar.gz
+*.log
+*.class
