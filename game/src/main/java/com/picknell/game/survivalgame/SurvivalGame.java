@@ -4,123 +4,109 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.picknell.game.survivalgame.player.OrbitCameraController;
+import com.picknell.game.survivalgame.world.WorldAppState;
 
-/**
- * Shared Android/desktop entry point.
- *
- * A lightweight, asset-free test world makes a successful renderer startup
- * visible on either platform. Legacy gameplay states remain opt-in until
- * their controls and physics are adapted for mobile.
- */
+/** Shared Android and desktop entry point for the continuously generated world. */
 public final class SurvivalGame extends SimpleApplication {
+    private static final long WORLD_SEED = 0x5EED2026L;
+    private static final ColorRGBA GOLD = new ColorRGBA(1f, 0.72f, 0.20f, 1f);
 
-    private static final ColorRGBA GROUND = new ColorRGBA(0.10f, 0.30f, 0.21f, 1f);
-    private static final ColorRGBA GRID = new ColorRGBA(0.19f, 0.47f, 0.32f, 1f);
-    private static final ColorRGBA TRUNK = new ColorRGBA(0.43f, 0.25f, 0.13f, 1f);
-    private static final ColorRGBA LEAVES = new ColorRGBA(0.19f, 0.58f, 0.31f, 1f);
-    private static final ColorRGBA LEAVES_LIGHT = new ColorRGBA(0.37f, 0.73f, 0.39f, 1f);
-    private static final ColorRGBA RED = new ColorRGBA(0.92f, 0.07f, 0.12f, 1f);
-    private static final ColorRGBA GOLD = new ColorRGBA(1f, 0.70f, 0.19f, 1f);
-
+    private OrbitCameraController cameraRig;
+    private WorldAppState world;
     private Node beacon;
+    private BitmapText status;
     private float elapsed;
+    private float hudTimer;
 
     @Override
     public void simpleInitApp() {
-        // No mouse capture or keyboard controls on the Android test scene.
         flyCam.setEnabled(false);
+        viewPort.setBackgroundColor(new ColorRGBA(0.055f, 0.11f, 0.17f, 1f));
 
-        viewPort.setBackgroundColor(new ColorRGBA(0.035f, 0.055f, 0.09f, 1f));
-        cam.setLocation(new Vector3f(7.5f, 5.8f, 9.5f));
-        cam.lookAt(new Vector3f(0f, 0.95f, 0f), Vector3f.UNIT_Y);
+        world = new WorldAppState(WORLD_SEED);
+        stateManager.attach(world);
+        cameraRig = new OrbitCameraController(cam);
+        inputManager.addRawInputListener(cameraRig);
 
-        createTestWorld();
         createBeacon();
         createHud();
     }
 
-    private void createTestWorld() {
-        // The top of the platform is y=0. Nothing requires external assets,
-        // bullet physics, touch mappings, or a platform-specific renderer.
-        box(rootNode, "Grass Platform", 3.7f, 0.18f, 3.7f,
-                0f, -0.18f, 0f, GROUND);
-
-        for (int i = -3; i <= 3; i++) {
-            box(rootNode, "Grid X " + i, 3.66f, 0.010f, 0.012f,
-                    0f, 0.013f, i, GRID);
-            box(rootNode, "Grid Z " + i, 0.012f, 0.010f, 3.66f,
-                    i, 0.013f, 0f, GRID);
-        }
-
-        tree(-2.5f, -2.2f);
-        tree(2.5f, -2.1f);
-        box(rootNode, "Harvestable Test Stone", 0.38f, 0.28f, 0.32f,
-                -2.1f, 0.28f, 1.5f, ColorRGBA.LightGray);
-    }
-
-    private void tree(float x, float z) {
-        box(rootNode, "Tree Trunk", 0.14f, 0.58f, 0.14f,
-                x, 0.58f, z, TRUNK);
-        box(rootNode, "Tree Lower Canopy", 0.68f, 0.38f, 0.68f,
-                x, 1.35f, z, LEAVES);
-        box(rootNode, "Tree Upper Canopy", 0.44f, 0.38f, 0.44f,
-                x, 1.98f, z, LEAVES_LIGHT);
-    }
-
     private void createBeacon() {
-        box(rootNode, "Beacon Base", 0.68f, 0.20f, 0.68f,
-                0f, 0.20f, 0f, GOLD);
-        box(rootNode, "Beacon Support", 0.18f, 0.57f, 0.18f,
-                0f, 0.97f, 0f, ColorRGBA.DarkGray);
-
-        beacon = new Node("Animated Beacon");
-        beacon.setLocalTranslation(0f, 2.25f, 0f);
-        box(beacon, "Candy Apple Red Core", 0.55f, 0.55f, 0.55f,
-                0f, 0f, 0f, RED);
-        box(beacon, "Gold Beacon Band", 0.59f, 0.09f, 0.59f,
-                0f, 0f, 0f, GOLD);
+        float ground = world.heightAt(0f, 0f);
+        box(rootNode, "Beacon base", 0f, ground + 0.18f, 0f,
+                0.65f, 0.18f, 0.65f, GOLD);
+        box(rootNode, "Beacon stem", 0f, ground + 0.92f, 0f,
+                0.16f, 0.56f, 0.16f, ColorRGBA.DarkGray);
+        beacon = new Node("Rotating arrival marker");
+        box(beacon, "Red signal", 0f, 0f, 0f,
+                0.50f, 0.50f, 0.50f, new ColorRGBA(0.93f, 0.08f, 0.12f, 1f));
+        box(beacon, "Golden ring", 0f, 0f, 0f,
+                0.55f, 0.09f, 0.55f, GOLD);
+        beacon.setLocalTranslation(0f, ground + 2.15f, 0f);
         rootNode.attachChild(beacon);
     }
 
     private void createHud() {
-        // The GUI is screen-space: keep the text away from the edges on phones.
-        float titleSize = Math.max(24f, Math.min(52f, cam.getWidth() / 32f));
+        float size = Math.max(24f, Math.min(48f, cam.getWidth() / 30f));
         BitmapText title = new BitmapText(guiFont);
         title.setText("SURVIVAL GAME");
-        title.setSize(titleSize);
+        title.setSize(size);
         title.setColor(GOLD);
-        title.setLocalTranslation(24f, cam.getHeight() - 24f, 0f);
+        title.setLocalTranslation(24f, cam.getHeight() - 22f, 0f);
         guiNode.attachChild(title);
 
-        BitmapText subtitle = new BitmapText(guiFont);
-        subtitle.setText("WORLD ONLINE  |  RENDER TEST 001");
-        subtitle.setSize(titleSize * 0.55f);
-        subtitle.setColor(ColorRGBA.White);
-        subtitle.setLocalTranslation(24f, cam.getHeight() - 32f - titleSize, 0f);
-        guiNode.attachChild(subtitle);
+        status = new BitmapText(guiFont);
+        status.setSize(size * 0.55f);
+        status.setColor(ColorRGBA.White);
+        status.setLocalTranslation(24f, cam.getHeight() - size - 28f, 0f);
+        guiNode.attachChild(status);
+
+        BitmapText help = new BitmapText(guiFont);
+        help.setText("DRAG: ORBIT   |   2 FINGERS: PAN   |   PINCH: ZOOM");
+        help.setSize(size * 0.46f);
+        help.setColor(new ColorRGBA(0.82f, 0.90f, 0.94f, 1f));
+        help.setLocalTranslation(24f, 46f, 0f);
+        guiNode.attachChild(help);
+        updateStatus();
     }
 
-    private Geometry box(Node parent, String name, float halfX, float halfY,
-                         float halfZ, float x, float y, float z, ColorRGBA color) {
-        Geometry geometry = new Geometry(name, new Box(halfX, halfY, halfZ));
-        Material material = new Material(assetManager,
-                "Common/MatDefs/Misc/Unshaded.j3md");
+    private void box(Node parent, String name, float x, float y, float z,
+                            float sx, float sy, float sz, ColorRGBA color) {
+        // Kept intentionally small: the animated beacon is a navigation landmark,
+        // not a dependency of the procedural terrain/biome systems.
+        Geometry geometry = new Geometry(name, new Box(sx, sy, sz));
+        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", color);
         geometry.setMaterial(material);
         geometry.setLocalTranslation(x, y, z);
         parent.attachChild(geometry);
-        return geometry;
+    }
+
+    private void updateStatus() {
+        status.setText("SEED " + WORLD_SEED + "  |  CHUNKS " + world.loadedChunkCount()
+                + "  |  " + world.biomeAt(cameraRig.focusX(), cameraRig.focusZ())
+                + "  |  " + Math.round(cameraRig.focusX()) + "," + Math.round(cameraRig.focusZ()));
     }
 
     @Override
     public void simpleUpdate(float tpf) {
         elapsed += tpf;
+        if (world.isInitialized()) {
+            world.setFocus(cameraRig.focusX(), cameraRig.focusZ());
+        }
+        cameraRig.update(tpf, world.heightAt(cameraRig.focusX(), cameraRig.focusZ()));
         beacon.rotate(0f, tpf * 0.8f, 0f);
-        beacon.setLocalTranslation(
-                0f, 2.25f + 0.12f * (float) Math.sin(elapsed * 2f), 0f);
+        beacon.setLocalTranslation(0f, world.heightAt(0f, 0f) + 2.15f
+                + (float) Math.sin(elapsed * 2f) * 0.12f, 0f);
+        hudTimer += tpf;
+        if (hudTimer >= 1f) {
+            hudTimer = 0f;
+            updateStatus();
+        }
     }
 }
