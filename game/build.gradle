@@ -1,17 +1,17 @@
 plugins {
     id 'java-library'
-    id "io.github.0ffz.github-packages" version "1.2.1" // Plugin for anonymous inclusion of artifacts hosted in github package registry
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 dependencies {
-    api libs.jmeCore
-    runtimeOnly libs.jmeJogg
-    runtimeOnly libs.jmePlugins
+    api "org.jmonkeyengine:jme3-core:${rootProject.ext.jmeVersion}"
 
-    api libs.jmeEffects
-    api libs.jmeTerrain
-    api libs.jmeNetworking
-    api libs.jmeJBullet
-
-    libs.jmeNifty
+    implementation "org.jmonkeyengine:jme3-effects:${rootProject.ext.jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-terrain:${rootProject.ext.jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-jbullet:${rootProject.ext.jmeVersion}"
 }

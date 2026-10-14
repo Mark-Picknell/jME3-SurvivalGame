@@ -1,19 +1,18 @@
-#FOLDERS
-.gradle
-.idea
-gradle
-build
-out
+# Gradle
+.gradle/
+build/
+**/build/
 
-#FILES
-hs_err_pid*
+# Android / IDE
+.idea/
+*.iml
 local.properties
-gradlew
-gradlew.bat
+captures/
+.externalNativeBuild/
+.cxx/
 
-#FILE TYPES
-*.dll
-*.jar
-*.tar.gz
+# Java / misc
+out/
 *.log
-*.class
+.DS_Store
+Thumbs.db

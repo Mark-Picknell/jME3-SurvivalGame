@@ -1,0 +1,34 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.picknell.game.stuffykarts.android'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.picknell.game.stuffykarts'
+        minSdk 21
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.0'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs = [rootProject.file('assets')]
+        }
+    }
+}
+
+dependencies {
+    implementation project(':game')
+
+    implementation "org.jmonkeyengine:jme3-android:${rootProject.ext.jmeVersion}"
+    implementation "org.jmonkeyengine:jme3-android-native:${rootProject.ext.jmeVersion}"
+}
