@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.picknell.game.stuffykarts.android'
+    namespace 'com.picknell.game.survivalgame.android'
     compileSdk 36
 
     defaultConfig {
-        applicationId 'com.picknell.game.stuffykarts'
+        applicationId 'com.picknell.game.survivalgame'
         minSdk 21
         targetSdk 36
         versionCode 1

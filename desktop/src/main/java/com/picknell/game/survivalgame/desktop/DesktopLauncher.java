@@ -1,7 +1,7 @@
-package com.picknell.game.stuffykarts.desktop;
+package com.picknell.game.survivalgame.desktop;
 
 import com.jme3.system.AppSettings;
-import com.picknell.game.stuffykarts.StuffyKarts;
+import com.picknell.game.survivalgame.SurvivalGame;
 
 public final class DesktopLauncher {
 
@@ -9,10 +9,10 @@ public final class DesktopLauncher {
     }
 
     public static void main(String[] arguments) {
-        StuffyKarts game = new StuffyKarts();
+        SurvivalGame game = new SurvivalGame();
 
         AppSettings settings = new AppSettings(true);
-        settings.setTitle("Stuffy Karts");
+        settings.setTitle("Survival Game");
         settings.setResolution(1280, 720);
 
         game.setSettings(settings);

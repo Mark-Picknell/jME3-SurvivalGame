@@ -9,7 +9,7 @@ lifecycleLivedata = "2.12.0-alpha03"
 lifecycleViewmodel = "2.12.0-alpha03"
 navigationFragment = "2.10.1"
 navigationUi = "2.10.1"
-jme3 = "3.9-Stable"
+jme3 = "3.9.0-stable"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -24,7 +24,7 @@ androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycleViewmodel" }
 androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
-jme3-core = { group = "org.jmonkeyengine", name = "jme3-core" version.ref = "jme3" }
-jme3-effects = { group = "org.jmonkeyengine", name = "jme3-effects" version.ref = "jme3" }
-jme3-terrain = { group = "org.jmonkeyengine", name = "jme3-terrain" version.ref = "jme3" }
-jme3-jbullet = { group = "org.jmonkeyengine", name = "jme3-jbullet" version.ref = "jme3" }
+jme3-core = { group = "org.jmonkeyengine", name = "jme3-core", version.ref = "jme3" }
+jme3-effects = { group = "org.jmonkeyengine", name = "jme3-effects", version.ref = "jme3" }
+jme3-terrain = { group = "org.jmonkeyengine", name = "jme3-terrain", version.ref = "jme3" }
+jme3-jbullet = { group = "org.jmonkeyengine", name = "jme3-jbullet", version.ref = "jme3" }

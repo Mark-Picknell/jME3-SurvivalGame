@@ -4,6 +4,9 @@ plugins {
     alias(libs.plugins.android.application) apply false
 }
 
+// Shared engine version for the Groovy module build scripts.
+extra["jmeVersion"] = libs.versions.jme3.get()
+
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }

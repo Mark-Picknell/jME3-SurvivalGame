@@ -16,7 +16,7 @@ dependencies {
 }
 
 application {
-    mainClass = 'com.picknell.game.stuffykarts.desktop.DesktopLauncher'
+    mainClass = 'com.picknell.game.survivalgame.desktop.DesktopLauncher'
 }
 
 sourceSets {
